@@ -87,6 +87,31 @@ tasks.processResources {
     filesMatching("fabric.mod.json") { expand(map) }
 }
 
+afterEvaluate {
+    loom {
+        runs {
+            configureEach {
+                vmArgs("-Xmx2G", "-XX:+UseShenandoahGC")
+
+                property("fabric.development", "true")
+                property("mixin.debug", "true")
+                property("mixin.debug.export.decompile", "false")
+                property("mixin.debug.verbose", "true")
+                property("mixin.dumpTargetOnFailure", "true")
+                // makes silent failures into hard-failures
+                property("mixin.checks", "true")
+                property("mixin.hotSwap", "true")
+
+                val mixinJarFile = configurations.compileClasspath.get().files {
+                    it.group == "net.fabricmc" && it.name == "sponge-mixin"
+                }.firstOrNull()
+                if (mixinJarFile != null)
+                    vmArg("-javaagent:$mixinJarFile")
+            }
+        }
+    }
+}
+
 publishMods {
     file = tasks.remapJar.get().archiveFile
     additionalFiles.from(tasks.remapSourcesJar.get().archiveFile)
