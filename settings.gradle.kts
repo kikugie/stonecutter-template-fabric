@@ -5,6 +5,9 @@ pluginManagement {
         mavenCentral()
         gradlePluginPortal()
         maven("https://maven.fabricmc.net/")
+        maven("https://maven.architectury.dev")
+        maven("https://maven.minecraftforge.net")
+        maven("https://maven.neoforged.net/releases/")
         maven("https://maven.kikugie.dev/releases")
     }
 }
@@ -13,12 +16,18 @@ plugins {
     id("dev.kikugie.stonecutter") version "0.3.+"
 }
 
+val dists = arrayOf("common", "fabric", "neoforge")
+include(*dists)
+
 extensions.configure<StonecutterSettings> {
-    kotlinController(true)
-    centralScript("build.gradle.kts")
+    kotlinController = true
+    centralScript = "build.gradle.kts"
 
     shared {
-        versions("1.19.4", "1.20.1", "1.20.2", "1.20.4")
+        versions("1.20.2", "1.20.4")
+    }
+    dists.forEach {
+        create(project(":$it"))
     }
     create(rootProject)
 }

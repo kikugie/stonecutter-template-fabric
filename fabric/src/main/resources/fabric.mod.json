@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "${id}",
+  "version": "${version}",
+  "name": "${name}",
+  "description": "TODO",
+  "authors": [
+    "Me!"
+  ],
+  "contact": {
+  },
+  "license": "MIT",
+  "icon": "assets/template/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.example.template.ExampleModFabric"
+    ]
+  },
+  "mixins": [
+    "template.mixins.json",
+    "template-common.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.15",
+    "java": ">=17"
+  }
+}
