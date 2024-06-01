@@ -2,7 +2,6 @@ plugins {
     `maven-publish`
     id("fabric-loom")
     id("me.modmuss50.mod-publish-plugin")
-    id("me.fallenbreath.yamlang")
 }
 
 class ModData {
@@ -16,7 +15,7 @@ val mod = ModData()
 val mcVersion = stonecutter.current.version
 val mcDep = property("mod.mc_dep").toString()
 
-version = "${mod.id}.v+$mcVersion"
+version = "${mod.version}+$mcVersion"
 group = mod.group
 base { archivesName.set(mod.id) }
 
@@ -43,7 +42,7 @@ repositories {
 }
 
 dependencies {
-    fun fapiModules(vararg modules: String) {
+    fun fapi(vararg modules: String) {
         modules.forEach { fabricApi.module(it, "${property("deps.fapi")}") }
     }
 
@@ -60,11 +59,6 @@ loom {
         vmArgs("-Dmixin.debug.export=true")
         runDir = "../../run"
     }
-}
-
-yamlang {
-    targetSourceSets.set(mutableListOf(sourceSets["main"]))
-    inputDir.set("assets/${mod.id}/lang")
 }
 
 java {
