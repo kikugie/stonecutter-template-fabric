@@ -1,7 +1,8 @@
 plugins {
     `maven-publish`
     id("fabric-loom")
-    id("me.modmuss50.mod-publish-plugin")
+    //id("dev.kikugie.j52j")
+    //id("me.modmuss50.mod-publish-plugin")
 }
 
 class ModData {
@@ -11,7 +12,12 @@ class ModData {
     val group = property("mod.group").toString()
 }
 
+class ModDependencies {
+    operator fun get(name: String) = property("deps.$name").toString()
+}
+
 val mod = ModData()
+val deps = ModDependencies()
 val mcVersion = stonecutter.current.version
 val mcDep = property("mod.mc_dep").toString()
 
@@ -43,14 +49,14 @@ repositories {
 
 dependencies {
     fun fapi(vararg modules: String) {
-        modules.forEach { fabricApi.module(it, "${property("deps.fapi")}") }
+        modules.forEach { fabricApi.module(it, deps["fapi"]) }
     }
 
     minecraft("com.mojang:minecraft:${mcVersion}")
-    mappings("net.fabricmc:yarn:${mcVersion}+build.${property("deps.yarn_build")}:v2")
-    modImplementation("net.fabricmc:fabric-loader:${property("deps.fabric_loader")}")
+    mappings("net.fabricmc:yarn:${mcVersion}+build.${deps["yarn_build"]}:v2")
+    modImplementation("net.fabricmc:fabric-loader:${deps["fabric_loader"]}")
 
-    modLocalRuntime("net.fabricmc.fabric-api:fabric-api:${property("deps.fabric_api")}")
+    modLocalRuntime("net.fabricmc.fabric-api:fabric-api:${deps["fabric_api"]}")
 }
 
 loom {
@@ -81,31 +87,14 @@ tasks.processResources {
     filesMatching("fabric.mod.json") { expand(map) }
 }
 
-afterEvaluate {
-    loom {
-        runs {
-            configureEach {
-                vmArgs("-Xmx2G", "-XX:+UseShenandoahGC")
-
-                property("fabric.development", "true")
-                property("mixin.debug", "true")
-                property("mixin.debug.export.decompile", "false")
-                property("mixin.debug.verbose", "true")
-                property("mixin.dumpTargetOnFailure", "true")
-                // makes silent failures into hard-failures
-                property("mixin.checks", "true")
-                property("mixin.hotSwap", "true")
-
-                val mixinJarFile = configurations.compileClasspath.get().files {
-                    it.group == "net.fabricmc" && it.name == "sponge-mixin"
-                }.firstOrNull()
-                if (mixinJarFile != null)
-                    vmArg("-javaagent:$mixinJarFile")
-            }
-        }
-    }
+tasks.register<Copy>("buildAndCollect") {
+    group = "build"
+    from(tasks.remapJar.get().archiveFile)
+    into(rootProject.layout.buildDirectory.file("libs/${mod.version}"))
+    dependsOn("build")
 }
 
+/*
 publishMods {
     file = tasks.remapJar.get().archiveFile
     additionalFiles.from(tasks.remapSourcesJar.get().archiveFile)
@@ -136,6 +125,7 @@ publishMods {
         }
     }
 }
+*/
 /*
 publishing {
     repositories {
