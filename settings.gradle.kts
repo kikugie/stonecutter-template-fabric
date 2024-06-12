@@ -11,11 +11,11 @@ pluginManagement {
 }
 
 plugins {
-    id("dev.kikugie.stonecutter") version "0.4-beta.4"
+    id("dev.kikugie.stonecutter") version "0.4-beta.5"
 }
 
 extensions.configure<StonecutterSettings> {
-    kotlinController= true
+    kotlinController = true
     centralScript = "build.gradle.kts"
 
     shared {
