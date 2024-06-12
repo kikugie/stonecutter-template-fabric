@@ -26,9 +26,10 @@ stonecutter configureEach {
     and https://stonecutter.kikugie.dev/
     */
     // Swaps replace the scope with a predefined value
-    swap("mod_version", "\"${project.property("mod.version")}\";")
+    swap("mod_version", "\"${property("mod.version")}\";")
     // Constants add variables available in conditions
-    const("release", project.property("mod.id") != "template")
+    const("release", property("mod.id") != "template")
     // Dependencies add targets to check versions against
+    // Using `project.property()` in this block gets the versioned property
     dependency("fapi", project.property("deps.fabric_api").toString())
 }

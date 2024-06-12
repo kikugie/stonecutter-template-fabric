@@ -69,6 +69,9 @@ loom {
 
 java {
     withSourcesJar()
+    val java = if (stonecutter.compare(mcVersion, "1.20.6") >= 0) JavaVersion.VERSION_21 else JavaVersion.VERSION_17
+    targetCompatibility = java
+    sourceCompatibility = java
 }
 
 tasks.processResources {
