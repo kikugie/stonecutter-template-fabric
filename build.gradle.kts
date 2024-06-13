@@ -57,9 +57,16 @@ dependencies {
     modImplementation("net.fabricmc:fabric-loader:${deps["fabric_loader"]}")
 
     modLocalRuntime("net.fabricmc.fabric-api:fabric-api:${deps["fabric_api"]}")
+    vineflowerDecompilerClasspath("org.vineflower:vineflower:1.10.1")
 }
 
 loom {
+    decompilers {
+        get("vineflower").apply { // Adds names to lambdas - useful for mixins
+            options.put("mark-corresponding-synthetics", "1")
+        }
+    }
+
     runConfigs.all {
         ideConfigGenerated(stonecutter.current.isActive)
         vmArgs("-Dmixin.debug.export=true")
