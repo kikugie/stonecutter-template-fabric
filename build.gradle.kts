@@ -37,27 +37,27 @@ loom {
 }
 
 repositories {
-    exclusiveContent {
-        forRepository { maven("https://www.cursemaven.com") { name = "CurseForge" } }
-        filter { includeGroup("curse.maven") }
+    fun strictMaven(url: String, alias: String, vararg groups: String) = exclusiveContent {
+        forRepository { maven(url) { name = alias } }
+        filter { groups.forEach(::includeGroup) }
     }
-    exclusiveContent {
-        forRepository { maven("https://api.modrinth.com/maven") { name = "Modrinth" } }
-        filter { includeGroup("maven.modrinth") }
-    }
+    strictMaven("https://www.cursemaven.com", "CurseForge", "curse.maven")
+    strictMaven("https://api.modrinth.com/maven", "Modrinth", "maven.modrinth")
 }
 
 dependencies {
-    fun fapi(vararg modules: String) {
-        modules.forEach { fabricApi.module(it, deps["fapi"]) }
+    fun fapi(vararg modules: String) = modules.forEach {
+        modImplementation(fabricApi.module(it, deps["fabric_api"]))
     }
 
-    minecraft("com.mojang:minecraft:${mcVersion}")
-    mappings("net.fabricmc:yarn:${mcVersion}+build.${deps["yarn_build"]}:v2")
+    minecraft("com.mojang:minecraft:$mcVersion")
+    mappings("net.fabricmc:yarn:$mcVersion+build.${deps["yarn_build"]}:v2")
     modImplementation("net.fabricmc:fabric-loader:${deps["fabric_loader"]}")
 
-    modLocalRuntime("net.fabricmc.fabric-api:fabric-api:${deps["fabric_api"]}")
-    vineflowerDecompilerClasspath("org.vineflower:vineflower:1.10.1")
+    fapi(
+        // Add modules from https://github.com/FabricMC/fabric
+        "fabric-lifecycle-events-v1",
+    )
 }
 
 loom {
@@ -68,7 +68,7 @@ loom {
     }
 
     runConfigs.all {
-        ideConfigGenerated(stonecutter.current.isActive)
+        ideConfigGenerated(true)
         vmArgs("-Dmixin.debug.export=true")
         runDir = "../../run"
     }
@@ -76,7 +76,7 @@ loom {
 
 java {
     withSourcesJar()
-    val java = if (stonecutter.compare(mcVersion, "1.20.6") >= 0) JavaVersion.VERSION_21 else JavaVersion.VERSION_17
+    val java = if (stonecutter.eval(mcVersion, ">=1.20.6")) JavaVersion.VERSION_21 else JavaVersion.VERSION_17
     targetCompatibility = java
     sourceCompatibility = java
 }

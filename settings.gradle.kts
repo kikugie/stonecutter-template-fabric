@@ -1,5 +1,3 @@
-import dev.kikugie.stonecutter.StonecutterSettings
-
 pluginManagement {
     repositories {
         mavenCentral()
@@ -9,15 +7,15 @@ pluginManagement {
 }
 
 plugins {
-    id("dev.kikugie.stonecutter") version "0.4.3"
+    id("dev.kikugie.stonecutter") version "0.4.4"
 }
 
-extensions.configure<StonecutterSettings> {
+stonecutter {
     kotlinController = true
     centralScript = "build.gradle.kts"
 
     shared {
-        versions("1.20.1", "1.20.4", "1.20.6", "1.21")
+        versions("1.20.1", "1.20.4", "1.20.6", "1.21.1")
     }
     create(rootProject)
 }
