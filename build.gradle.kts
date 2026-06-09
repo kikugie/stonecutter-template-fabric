@@ -46,7 +46,7 @@ dependencies {
     loomx.applyMojangMappings()
 
     modImplementation("net.fabricmc:fabric-loader:${property("deps.fabric_loader")}")
-    fapi("fabric-lifecycle-events-v1", "fabric-resource-loader-v0", "fabric-content-registries-v0")
+    fapi("fabric-lifecycle-events-v1", "fabric-resource-loader-v0", "fabric-content-registries-v0", "fabric-registry-sync-v0")
 }
 
 loom {
