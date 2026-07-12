@@ -14,7 +14,7 @@ plugins {
     id("dev.kikugie.stonecutter") version "0.9.6"
 
     // Used for cross-compat for 26.1+ and older versions (https://codeberg.org/KikuGie/loom-back-compat)
-    id("dev.kikugie.loom-back-compat") version "0.3"
+    id("dev.kikugie.loom-back-compat") version "0.4"
 
     // Sometimes it is needed to make Gradle run at all, so it doesn't hurt to have
     // (https://github.com/gradle/foojay-toolchains)
