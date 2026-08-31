@@ -10,7 +10,7 @@ pluginManagement {
 
 plugins {
     // Check the latest version on https://stonecutter.kikugie.dev/blog/changes/0.9
-    id("dev.kikugie.stonecutter") version "0.9.7"
+    id("dev.kikugie.stonecutter") version "0.9.8"
 
     // Used for cross-compat for 26.1+ and older versions (https://codeberg.org/KikuGie/loom-back-compat)
     id("dev.kikugie.loom-back-compat") version "0.4.2"
